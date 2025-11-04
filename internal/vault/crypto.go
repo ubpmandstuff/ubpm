@@ -45,6 +45,24 @@ func Encrypt(plaintext, key []byte) ([]byte, error) {
 }
 
 func Decrypt(ciphertext, key []byte) ([]byte, error) {
-	// TODO implement decryption
-	return nil, nil
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, err
+	}
+
+	nonce := make([]byte, gcm.NonceSize())
+	if _, err := rand.Read(nonce); err != nil {
+		return nil, err
+	}
+
+	plaintext, err := gcm.Open(nonce, nonce, ciphertext, nil)
+	if err != nil {
+		return nil, err
+	}
+	return plaintext, nil
 }
