@@ -8,10 +8,10 @@ import (
 	"golang.org/x/crypto/argon2"
 )
 
+// SaltSize is a recommended length for a secure salt
 const SaltSize = 32
 
-// TODO: add documentation to each function
-
+// GenerateSalt creates and returns a securely generated salt
 func GenerateSalt() ([]byte, error) {
 	salt := make([]byte, SaltSize)
 	if _, err := rand.Read(salt); err != nil {
@@ -20,11 +20,13 @@ func GenerateSalt() ([]byte, error) {
 	return salt, nil
 }
 
+// DeriveKey derives a key from a string and a salt using argon2
 func DeriveKey(password string, salt []byte) []byte {
 	key := argon2.IDKey([]byte(password), salt, 1, 64*1024, 4, 32)
 	return key
 }
 
+// Encrypt encrypts given plaintext data using AES in Gallois-Counter Mode with a provided key
 func Encrypt(plaintext, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -44,6 +46,7 @@ func Encrypt(plaintext, key []byte) ([]byte, error) {
 	return gcm.Seal(nonce, nonce, plaintext, nil), nil
 }
 
+// Decrypt decrypts given ciphertext data using AES in Gallois-Counter Mode with a provided key
 func Decrypt(ciphertext, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
