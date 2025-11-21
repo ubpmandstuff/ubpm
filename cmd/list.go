@@ -22,6 +22,10 @@ var listCmd = &cobra.Command{
 	RunE:  runList,
 }
 
+func init() {
+	rootCmd.AddCommand(listCmd)
+}
+
 func runList(cmd *cobra.Command, args []string) error {
 	// define path
 	path := ".ubpm/vault.ubpm.json"
