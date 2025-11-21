@@ -16,7 +16,7 @@ const (
 )
 
 // InitVault initializes a ubpm vault using a provided password and a mountpoint
-func InitVault(mountpoint string, passwd []byte) (string, error) {
+func InitVault(mountpoint string, password []byte) (string, error) {
 	// path vars
 	vaultDir := filepath.Join(mountpoint, VaultDir)
 	vaultPath := filepath.Join(vaultDir, VaultFilename)
@@ -38,7 +38,7 @@ func InitVault(mountpoint string, passwd []byte) (string, error) {
 	}
 
 	// derive key from given password and salt
-	key := DeriveKey(passwd, salt)
+	key := DeriveKey(password, salt)
 
 	// create and marshal empty vault data
 	emptyVault := VaultData{
@@ -57,7 +57,7 @@ func InitVault(mountpoint string, passwd []byte) (string, error) {
 	}
 
 	// fill output file
-	fileContent := Vault{
+	fileContent := VaultFile{
 		Version: UbpmVersion,
 		Salt:    salt,
 		Data:    encrypedData,
@@ -75,4 +75,37 @@ func InitVault(mountpoint string, passwd []byte) (string, error) {
 	}
 
 	return vaultPath, nil
+}
+
+func Open(path string, password []byte) (*Vault, error) {
+	// read raw data and unmarshal it
+	rawData, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file: %w", err)
+	}
+	var file VaultFile
+	if err := json.Unmarshal(rawData, &file); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal data: %w", err)
+	}
+
+	// derive key and decrypt data
+	key := DeriveKey(password, file.Salt)
+
+	plaintext, err := Decrypt(file.Data, key)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't decrypt file: invalid password or corrupted file")
+	}
+
+	// unmarshal plaintext into data
+	var data VaultData
+	if err := json.Unmarshal(plaintext, &data); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal decrypted data: %w", err)
+	}
+
+	return &Vault{
+		Path: path,
+		Key:  key,
+		Salt: file.Salt,
+		Data: &data,
+	}, nil
 }
