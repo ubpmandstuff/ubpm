@@ -1,4 +1,7 @@
 /*
+Package cmd provides a CLI for ubpm
+
+--
 Copyright © 2025 dura5ka
 
 This program is free software: you can redistribute it and/or modify
@@ -29,13 +32,11 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "ubpm",
-	Short: "",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "usb-based password manager",
+	Long: `ubpm is a usb-based password manager written in go.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	it stores all your passwords in an aes-256-gcm-encrypted vault
+	on your usb for portability.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },

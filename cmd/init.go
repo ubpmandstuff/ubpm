@@ -5,23 +5,21 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
+	"dura5ka/ubpm/internal/vault"
+
+	"github.com/charmbracelet/log"
 	"github.com/spf13/cobra"
+	"golang.org/x/term"
 )
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "initialize a ubpm vault",
-	// 	Long: `A longer description that spans multiple lines and likely contains examples
-	// and usage of using your command. For example:
-
-	// Cobra is a CLI library for Go that empowers applications.
-	// This application is a tool to generate the needed files
-	// to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init called")
-	},
+	Args:  cobra.MaximumNArgs(1),
+	RunE:  InitRun,
 }
 
 func init() {
@@ -36,4 +34,52 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func InitRun(cmd *cobra.Command, args []string) error {
+	// init path variable
+	path := "."
+	if len(args) > 0 {
+		path = args[0]
+	}
+
+	info, err := os.Stat(path)
+	if err != nil {
+		return fmt.Errorf("invalid path: %w", err)
+	}
+	if !info.IsDir() {
+		return fmt.Errorf("path must be a directory")
+	}
+
+	log.Info("initializing vault", "path", path)
+
+	fmt.Print("enter master password: ")
+	pass1, err := term.ReadPassword(int(os.Stdin.Fd()))
+	fmt.Println()
+	if len(pass1) == 0 {
+		return fmt.Errorf("password cannot be empty")
+	}
+	if err != nil {
+		return err
+	}
+
+	fmt.Print("enter master password: ")
+	pass2, err := term.ReadPassword(int(os.Stdin.Fd()))
+	fmt.Println()
+	if err != nil {
+		return err
+	}
+
+	if string(pass1) != string(pass2) {
+		return fmt.Errorf("passwords do not match")
+	}
+
+	vaultPath, err := vault.InitVault(path, pass1)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("vault created at: %s\n", vaultPath)
+
+	return nil
 }
