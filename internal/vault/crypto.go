@@ -4,6 +4,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"fmt"
 
 	"golang.org/x/crypto/argon2"
 )
@@ -58,12 +59,18 @@ func Decrypt(ciphertext, key []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	nonce := make([]byte, gcm.NonceSize())
-	if _, err := rand.Read(nonce); err != nil {
-		return nil, err
+	// the hell was i on when writing this?
+	// nonce := make([]byte, gcm.NonceSize())
+	// if _, err := rand.Read(nonce); err != nil {
+	// 	return nil, err
+	// }
+
+	nonceSize := gcm.NonceSize()
+	if len(ciphertext) < nonceSize {
+		return nil, fmt.Errorf("ciphertext too short")
 	}
 
-	plaintext, err := gcm.Open(nonce, nonce, ciphertext, nil)
+	plaintext, err := gcm.Open(nil, ciphertext[:nonceSize], ciphertext[nonceSize:], nil)
 	if err != nil {
 		return nil, err
 	}
