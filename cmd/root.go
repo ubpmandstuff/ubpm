@@ -33,10 +33,10 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "ubpm",
 	Short: "usb-based password manager",
-	Long: `ubpm is a usb-based password manager written in go.
+	Long: `ubpm is a simple usb-based password manager written in go.
 
-	it stores all your passwords in an aes-256-gcm-encrypted vault
-	on your usb for portability.`,
+it stores all your passwords in an aes-256-gcm-encrypted vault
+on your usb for portability.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
