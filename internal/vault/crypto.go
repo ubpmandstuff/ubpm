@@ -20,7 +20,7 @@ func GenerateSalt() ([]byte, error) {
 	return salt, nil
 }
 
-// DeriveKey derives a key from a string and a salt using argon2
+// DeriveKey derives a secure key from a password and a salt using argon2
 func DeriveKey(password []byte, salt []byte) []byte {
 	key := argon2.IDKey(password, salt, 1, 64*1024, 4, 32)
 	return key
