@@ -12,8 +12,8 @@ build: clean
 
 clean:
 	@echo "cleaning builds for current version"
-	rm -rf "build/{{version}}/*"
+	rm -rf build/{{version}}/*
 
 clean-all:
 	@echo "cleaning all builds"
-	rm -rf "build/*"
+	rm -rf build/*
