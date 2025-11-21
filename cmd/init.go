@@ -63,7 +63,7 @@ func InitRun(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Print("enter master password: ")
+	fmt.Print("confirm password: ")
 	pass2, err := term.ReadPassword(int(os.Stdin.Fd()))
 	fmt.Println()
 	if err != nil {
