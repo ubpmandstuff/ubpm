@@ -1,4 +1,4 @@
-binary_name := "usb-password-manager"
+binary_name := "ubpm"
 version := "0.0.1+alpha"
 
 run:
