@@ -1,4 +1,3 @@
-/*
- * `usb` is a utility subpackage for detecting usb devices.
+/* Package usb provides utilities for detecting and working with usb devices.
  */
 package usb
