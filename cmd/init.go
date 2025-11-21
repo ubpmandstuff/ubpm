@@ -16,7 +16,7 @@ import (
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
-	Use:   "init",
+	Use:   "init path",
 	Short: "initialize a ubpm vault",
 	Args:  cobra.MaximumNArgs(1),
 	RunE:  InitRun,
