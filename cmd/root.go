@@ -20,9 +20,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
+	"fmt"
 	"os"
 
+	"dura5ka/ubpm/internal/vault"
+
 	"github.com/spf13/cobra"
+	"golang.org/x/term"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -45,6 +49,18 @@ func Execute() {
 	if err != nil {
 		os.Exit(1)
 	}
+}
+
+// loadVault provides a utility function to open a ubpm vault
+func loadVault(path string) (*vault.Vault, error) {
+	fmt.Print("enter password: ")
+	pass, err := term.ReadPassword(int(os.Stdin.Fd()))
+	fmt.Println()
+	if err != nil {
+		return nil, err
+	}
+
+	return vault.Open(path, pass)
 }
 
 func init() {
