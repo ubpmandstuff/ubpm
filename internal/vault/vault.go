@@ -77,6 +77,7 @@ func Init(mountpoint string, password []byte) (string, error) {
 	return vaultPath, nil
 }
 
+// Open opens a ubpm vault and returns it
 func Open(path string, password []byte) (*Vault, error) {
 	// read raw data and unmarshal it
 	rawData, err := os.ReadFile(path)
@@ -108,4 +109,39 @@ func Open(path string, password []byte) (*Vault, error) {
 		Salt: file.Salt,
 		Data: &data,
 	}, nil
+}
+
+// Save encrypts and writes all changes to the vault to disk
+func (v *Vault) Save() error {
+	// marshal data into json
+	plaintext, err := json.Marshal(v.Data)
+	if err != nil {
+		return err
+	}
+
+	// encrypt marshalled json
+	encrypedData, err := Encrypt(plaintext, v.Key)
+	if err != nil {
+		return err
+	}
+
+	// fill vault file struct
+	fileContent := &VaultFile{
+		Version: UbpmVersion,
+		Salt:    v.Salt,
+		Data:    encrypedData,
+	}
+
+	// marshal vault file
+	output, err := json.MarshalIndent(fileContent, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	// write output to disk
+	if err := os.WriteFile(v.Path, output, 0o600); err != nil {
+		return err
+	}
+
+	return nil
 }
