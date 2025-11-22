@@ -15,7 +15,7 @@ DESCRIPTION
 
 INSTALLATION
 	build from source:
-		$ just build && just install
+		$ just build && sudo just install
 	
 COMMANDS
 	init <path>
