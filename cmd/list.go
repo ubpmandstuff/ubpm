@@ -8,10 +8,7 @@ import (
 	"os"
 	"text/tabwriter"
 
-	"dura5ka/ubpm/internal/vault"
-
 	"github.com/spf13/cobra"
-	"golang.org/x/term"
 )
 
 // listCmd represents
@@ -34,14 +31,7 @@ func runList(cmd *cobra.Command, args []string) error {
 	}
 
 	// prompt user for password and decrypt vault
-	fmt.Print("enter password: ")
-	pass, err := term.ReadPassword(int(os.Stdin.Fd()))
-	fmt.Println()
-	if err != nil {
-		return err
-	}
-
-	v, err := vault.Open(path, pass)
+	v, err := loadVault(path)
 	if err != nil {
 		return err
 	}
