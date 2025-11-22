@@ -19,7 +19,7 @@ var initCmd = &cobra.Command{
 	Use:   "init path",
 	Short: "initialize a ubpm vault",
 	Args:  cobra.MaximumNArgs(1),
-	RunE:  InitRun,
+	RunE:  runInit,
 }
 
 func init() {
@@ -36,7 +36,7 @@ func init() {
 	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-func InitRun(cmd *cobra.Command, args []string) error {
+func runInit(cmd *cobra.Command, args []string) error {
 	// init path variable
 	path := "."
 	if len(args) > 0 {
