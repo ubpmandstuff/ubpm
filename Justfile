@@ -1,5 +1,5 @@
 binary_name := "ubpm"
-version := "0.0.2+alpha"
+version := "0.0.3+alpha"
 
 run:
 	go mod tidy
