@@ -145,3 +145,15 @@ func (v *Vault) Save() error {
 
 	return nil
 }
+
+func (v *Vault) AddEntry(website, username, password, notes string) error {
+	data := Entry{
+		Website:  website,
+		Username: username,
+		Password: password,
+		Notes:    notes,
+	}
+
+	v.Data.Entries = append(v.Data.Entries, data)
+	return v.Save()
+}
