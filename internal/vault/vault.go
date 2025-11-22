@@ -111,7 +111,7 @@ func Open(path string, password []byte) (*Vault, error) {
 	}, nil
 }
 
-// Save encrypts and writes all changes to the vault to disk
+// v.Save encrypts and writes all changes to the vault to disk
 func (v *Vault) Save() error {
 	// marshal data into json
 	plaintext, err := json.Marshal(v.Data)
@@ -146,6 +146,7 @@ func (v *Vault) Save() error {
 	return nil
 }
 
+// v.AddEntry adds an entry from specified args to a ubpm vault
 func (v *Vault) AddEntry(website, username, password, notes string) error {
 	data := Entry{
 		Website:  website,
