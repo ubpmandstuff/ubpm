@@ -15,8 +15,8 @@ const (
 	VaultFilename = "vault.ubpm.json"
 )
 
-// InitVault initializes a ubpm vault using a provided password and a mountpoint
-func InitVault(mountpoint string, password []byte) (string, error) {
+// Init initializes a ubpm vault using a provided password and a mountpoint
+func Init(mountpoint string, password []byte) (string, error) {
 	// path vars
 	vaultDir := filepath.Join(mountpoint, VaultDir)
 	vaultPath := filepath.Join(vaultDir, VaultFilename)

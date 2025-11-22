@@ -74,7 +74,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("passwords do not match")
 	}
 
-	vaultPath, err := vault.InitVault(path, pass1)
+	vaultPath, err := vault.Init(path, pass1)
 	if err != nil {
 		return err
 	}
