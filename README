@@ -15,8 +15,8 @@ DESCRIPTION
 
 INSTALLATION
 	build from source:
-		$ just build && sudo just install
-	
+		$ just build
+
 COMMANDS
 	init <path>
 		initialize a new vault at the specified path. if path is ommited, defaults
