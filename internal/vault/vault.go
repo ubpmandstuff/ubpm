@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -111,6 +112,8 @@ func Open(path string, password []byte) (*Vault, error) {
 	}, nil
 }
 
+func GenerateID() {}
+
 // Save encrypts and writes all changes to the vault to disk
 func (v *Vault) Save() error {
 	// marshal data into json
@@ -157,4 +160,23 @@ func (v *Vault) AddEntry(website, username, password, notes string) error {
 
 	v.Data.Entries = append(v.Data.Entries, data)
 	return v.Save()
+}
+
+func (v *Vault) FindEntry(id string) (*Entry, error) {
+	for i := range v.Data.Entries {
+		if len(id) >= 4 && strings.HasPrefix(v.Data.Entries[i].ID, id) {
+			return &v.Data.Entries[i], nil
+		}
+	}
+	return nil, fmt.Errorf("entry not found: %s", id)
+}
+
+func (v *Vault) RemoveEntry(id string) error {
+	for i := range v.Data.Entries {
+		if len(id) >= 4 && strings.HasPrefix(v.Data.Entries[i].ID, id) {
+			v.Data.Entries = append(v.Data.Entries[:i], v.Data.Entries[i+1:]...)
+			return v.Save()
+		}
+	}
+	return fmt.Errorf("entry not found: %s", id)
 }
