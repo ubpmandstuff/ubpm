@@ -187,30 +187,35 @@ func (v *Vault) FindEntry(id string) (*Entry, int, error) {
 	return nil, 0, fmt.Errorf("entry not found: %s", id)
 }
 
+// WithWebsite provides an option to change an entry's website; utility function for EditEntry
 func WithWebsite(w string) EntryOption {
 	return func(e *Entry) {
 		e.Website = w
 	}
 }
 
+// WithUsername provides an option to change an entry's username; utility function for EditEntry
 func WithUsername(u string) EntryOption {
 	return func(e *Entry) {
 		e.Username = u
 	}
 }
 
+// WithPassword provides an option to change an entry's password; utility function for EditEntry
 func WithPassword(p string) EntryOption {
 	return func(e *Entry) {
 		e.Password = p
 	}
 }
 
+// WithNotes provides an option to change an entry's notes; utility function for EditEntry
 func WithNotes(n string) EntryOption {
 	return func(e *Entry) {
 		e.Notes = n
 	}
 }
 
+// EditEntry attempts to find and edit an entry by a given id
 func (v *Vault) EditEntry(id string, opts ...EntryOption) error {
 	_, i, err := v.FindEntry(id)
 	if err != nil {
