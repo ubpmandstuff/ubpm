@@ -26,10 +26,14 @@ type VaultData struct {
 
 // type Entry describes a vault entry
 type Entry struct {
-	ID        string    `json:"id"`
-	Website   string    `json:"website"`
-	Username  string    `json:"username"`
-	Password  string    `json:"password"`
-	Notes     string    `json:"notes,omitempty"`
-	CreatedAt time.Time `json:"created_at"`
+	ID         string    `json:"id"`
+	Website    string    `json:"website"`
+	Username   string    `json:"username"`
+	Password   string    `json:"password"`
+	Notes      string    `json:"notes,omitempty"`
+	CreatedAt  time.Time `json:"created_at"`
+	ModifiedAt time.Time `json:"modified_at"`
 }
+
+// type EntryOption is a shorthand for func(*Entry)
+type EntryOption func(*Entry)
