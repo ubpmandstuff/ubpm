@@ -161,12 +161,13 @@ func (v *Vault) Save() error {
 // AddEntry adds an entry from specified args to a ubpm vault
 func (v *Vault) AddEntry(website, username, password, notes string) error {
 	data := Entry{
-		ID:        GenerateID(),
-		Website:   website,
-		Username:  username,
-		Password:  password,
-		Notes:     notes,
-		CreatedAt: time.Now(),
+		ID:         GenerateID(),
+		Website:    website,
+		Username:   username,
+		Password:   password,
+		Notes:      notes,
+		CreatedAt:  time.Now(),
+		ModifiedAt: time.Now(),
 	}
 
 	v.Data.Entries = append(v.Data.Entries, data)
@@ -184,6 +185,45 @@ func (v *Vault) FindEntry(id string) (*Entry, int, error) {
 		}
 	}
 	return nil, 0, fmt.Errorf("entry not found: %s", id)
+}
+
+func WithWebsite(w string) EntryOption {
+	return func(e *Entry) {
+		e.Website = w
+	}
+}
+
+func WithUsername(u string) EntryOption {
+	return func(e *Entry) {
+		e.Username = u
+	}
+}
+
+func WithPassword(p string) EntryOption {
+	return func(e *Entry) {
+		e.Password = p
+	}
+}
+
+func WithNotes(n string) EntryOption {
+	return func(e *Entry) {
+		e.Notes = n
+	}
+}
+
+func (v *Vault) EditEntry(id string, opts ...EntryOption) error {
+	_, i, err := v.FindEntry(id)
+	if err != nil {
+		return err
+	}
+
+	for _, opt := range opts {
+		opt(&v.Data.Entries[i])
+	}
+
+	v.Data.Entries[i].ModifiedAt = time.Now()
+
+	return v.Save()
 }
 
 // RemoveEntry attempts find an entry by id and remove it, otherwise returns an error
