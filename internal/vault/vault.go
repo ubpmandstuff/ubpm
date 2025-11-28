@@ -4,11 +4,14 @@
 package vault
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 const (
@@ -78,7 +81,7 @@ func Init(mountpoint string, password []byte) (string, error) {
 	return vaultPath, nil
 }
 
-// Open opens a ubpm vault and returns it
+// Open opens and returns an instance of a ubpm vault
 func Open(path string, password []byte) (*Vault, error) {
 	// read raw data and unmarshal it
 	rawData, err := os.ReadFile(path)
@@ -112,7 +115,13 @@ func Open(path string, password []byte) (*Vault, error) {
 	}, nil
 }
 
-func GenerateID() {}
+// Generate generates and returns a unique id. this is a utility function for
+// identifying entries.
+func GenerateID() string {
+	b := make([]byte, 16) // 32 chars
+	rand.Read(b)
+	return hex.EncodeToString(b)
+}
 
 // Save encrypts and writes all changes to the vault to disk
 func (v *Vault) Save() error {
@@ -152,10 +161,12 @@ func (v *Vault) Save() error {
 // AddEntry adds an entry from specified args to a ubpm vault
 func (v *Vault) AddEntry(website, username, password, notes string) error {
 	data := Entry{
-		Website:  website,
-		Username: username,
-		Password: password,
-		Notes:    notes,
+		ID:        GenerateID(),
+		Website:   website,
+		Username:  username,
+		Password:  password,
+		Notes:     notes,
+		CreatedAt: time.Now(),
 	}
 
 	v.Data.Entries = append(v.Data.Entries, data)
@@ -163,22 +174,24 @@ func (v *Vault) AddEntry(website, username, password, notes string) error {
 }
 
 // FindEntry attempts to find an entry by id, otherwise returns an error
-func (v *Vault) FindEntry(id string) (*Entry, error) {
+//
+// this function returns the index as the second argument to provide a way to
+// find entries to other functions
+func (v *Vault) FindEntry(id string) (*Entry, int, error) {
 	for i := range v.Data.Entries {
 		if len(id) >= 4 && strings.HasPrefix(v.Data.Entries[i].ID, id) {
-			return &v.Data.Entries[i], nil
+			return &v.Data.Entries[i], i, nil
 		}
 	}
-	return nil, fmt.Errorf("entry not found: %s", id)
+	return nil, 0, fmt.Errorf("entry not found: %s", id)
 }
 
 // RemoveEntry attempts find an entry by id and remove it, otherwise returns an error
 func (v *Vault) RemoveEntry(id string) error {
-	for i := range v.Data.Entries {
-		if len(id) >= 4 && strings.HasPrefix(v.Data.Entries[i].ID, id) {
-			v.Data.Entries = append(v.Data.Entries[:i], v.Data.Entries[i+1:]...)
-			return v.Save()
-		}
+	_, i, err := v.FindEntry(id)
+	if err != nil {
+		return err
 	}
-	return fmt.Errorf("entry not found: %s", id)
+	v.Data.Entries = append(v.Data.Entries[:i], v.Data.Entries[i+1:]...)
+	return v.Save()
 }
