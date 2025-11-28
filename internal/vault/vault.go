@@ -159,10 +159,10 @@ func (v *Vault) Save() error {
 }
 
 // AddEntry adds an entry from specified args to a ubpm vault
-func (v *Vault) AddEntry(website, username, password, notes string) error {
+func (v *Vault) AddEntry(title, username, password, notes string) error {
 	data := Entry{
 		ID:         GenerateID(),
-		Website:    website,
+		Title:      title,
 		Username:   username,
 		Password:   password,
 		Notes:      notes,
@@ -190,7 +190,7 @@ func (v *Vault) FindEntry(id string) (*Entry, int, error) {
 // WithWebsite provides an option to change an entry's website; utility function for EditEntry
 func WithWebsite(w string) EntryOption {
 	return func(e *Entry) {
-		e.Website = w
+		e.Title = w
 	}
 }
 
