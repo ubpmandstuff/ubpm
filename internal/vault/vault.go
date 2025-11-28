@@ -162,6 +162,7 @@ func (v *Vault) AddEntry(website, username, password, notes string) error {
 	return v.Save()
 }
 
+// FindEntry attempts to find an entry by id, otherwise returns an error
 func (v *Vault) FindEntry(id string) (*Entry, error) {
 	for i := range v.Data.Entries {
 		if len(id) >= 4 && strings.HasPrefix(v.Data.Entries[i].ID, id) {
@@ -171,6 +172,7 @@ func (v *Vault) FindEntry(id string) (*Entry, error) {
 	return nil, fmt.Errorf("entry not found: %s", id)
 }
 
+// RemoveEntry attempts find an entry by id and remove it, otherwise returns an error
 func (v *Vault) RemoveEntry(id string) error {
 	for i := range v.Data.Entries {
 		if len(id) >= 4 && strings.HasPrefix(v.Data.Entries[i].ID, id) {
