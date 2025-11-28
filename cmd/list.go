@@ -42,11 +42,11 @@ func runList(cmd *cobra.Command, args []string) error {
 	}
 
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)
-	fmt.Fprintln(w, "ID\tWEBSITE\tUSERNAME\tCREATED")
+	fmt.Fprintln(w, "ID\tTITLE\tUSERNAME\tCREATED")
 	for _, e := range v.Data.Entries {
 		fmt.Fprintf(w, "%s\t%s\t%s\t%s\n",
 			e.ID[:8],
-			e.Website,
+			e.Title,
 			e.Username,
 			e.CreatedAt.Format("2006-01-02"),
 		)

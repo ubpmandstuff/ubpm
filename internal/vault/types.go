@@ -27,7 +27,7 @@ type VaultData struct {
 // type Entry describes a vault entry
 type Entry struct {
 	ID         string    `json:"id"`
-	Website    string    `json:"website"`
+	Title      string    `json:"title"`
 	Username   string    `json:"username"`
 	Password   string    `json:"password"`
 	Notes      string    `json:"notes,omitempty"`
