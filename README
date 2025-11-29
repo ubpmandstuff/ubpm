@@ -29,7 +29,7 @@ COMMANDS
 	new|add [-i path]
 	  create a new entry in the specified vault. if path is ommited, defaults to
 		.ubpm/vault.ubpm.json.
-I
+
 	show id [-i path] [-j] [flags]
 		show the details of a specific entry in the specified vault. -j returns
 		specified info in json format. if path is ommited, defaults to
