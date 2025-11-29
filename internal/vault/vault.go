@@ -187,10 +187,10 @@ func (v *Vault) FindEntry(id string) (*Entry, int, error) {
 	return nil, 0, fmt.Errorf("entry not found: %s", id)
 }
 
-// WithWebsite provides an option to change an entry's website; utility function for EditEntry
-func WithWebsite(w string) EntryOption {
+// WithTitle provides an option to change an entry's website; utility function for EditEntry
+func WithTitle(t string) EntryOption {
 	return func(e *Entry) {
-		e.Title = w
+		e.Title = t
 	}
 }
 
