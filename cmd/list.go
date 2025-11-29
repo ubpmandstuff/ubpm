@@ -13,21 +13,22 @@ import (
 
 // listCmd represents
 var listCmd = &cobra.Command{
-	Use:   "list path",
+	Use:   "list [-i path]",
 	Short: "list all items in vault",
-	Args:  cobra.MaximumNArgs(1),
 	RunE:  runList,
 }
 
 func init() {
 	rootCmd.AddCommand(listCmd)
+	// default path flag
+	listCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located (defaults to .ubpm/vault.ubpm.json)")
 }
 
 func runList(cmd *cobra.Command, args []string) error {
-	// define path
-	path := ".ubpm/vault.ubpm.json"
-	if len(args) > 0 {
-		path = args[0]
+	// init path variable
+	path, err := cmd.Flags().GetString("path")
+	if err != nil {
+		return err
 	}
 
 	// prompt user for password and decrypt vault
