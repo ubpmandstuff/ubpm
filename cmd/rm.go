@@ -10,8 +10,8 @@ import (
 )
 
 var rmCmd = &cobra.Command{
-	Use:   "rm id [-i path]",
-	Short: "remove an entry",
+	Use:   "rm id [-i path] [--noconfirm]",
+	Short: "remove an entry from a ubpm vault",
 	RunE:  runRm,
 }
 
