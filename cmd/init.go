@@ -16,31 +16,22 @@ import (
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
-	Use:   "init path",
+	Use:   "init [-i path]",
 	Short: "initialize a ubpm vault",
-	Args:  cobra.MaximumNArgs(1),
 	RunE:  runInit,
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// default path flag
+	initCmd.Flags().StringP("path", "i", ".", "where to create vault (defaults to current directory)")
 }
 
 func runInit(cmd *cobra.Command, args []string) error {
 	// init path variable
-	path := "."
-	if len(args) > 0 {
-		path = args[0]
+	path, err := cmd.Flags().GetString("path")
+	if err != nil {
+		return err
 	}
 
 	info, err := os.Stat(path)
@@ -53,9 +44,9 @@ func runInit(cmd *cobra.Command, args []string) error {
 
 	log.Info("initializing vault", "path", path)
 
-	fmt.Print("enter master password: ")
+	fmt.Fprint(os.Stderr, "enter master password: ")
 	pass1, err := term.ReadPassword(int(os.Stdin.Fd()))
-	fmt.Println()
+	fmt.Fprintln(os.Stderr)
 	if len(pass1) == 0 {
 		return fmt.Errorf("password cannot be empty")
 	}
@@ -63,9 +54,9 @@ func runInit(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Print("confirm password: ")
+	fmt.Fprint(os.Stderr, "confirm password: ")
 	pass2, err := term.ReadPassword(int(os.Stdin.Fd()))
-	fmt.Println()
+	fmt.Fprintln(os.Stderr)
 	if err != nil {
 		return err
 	}
