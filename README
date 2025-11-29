@@ -18,9 +18,32 @@ INSTALLATION
 		$ just build
 
 COMMANDS
-	init <path>
+	init [-i path]
 		initialize a new vault at the specified path. if path is ommited, defaults
 		to current directory.
+	
+	list [-i path]
+		list all entries in the specified vault. if path is ommited, defaults to
+		.ubpm/vault.ubpm.json.
+
+	new|add [-i path]
+	  create a new entry in the specified vault. if path is ommited, defaults to
+		.ubpm/vault.ubpm.json.
+I
+	show id [-i path] [-j] [flags]
+		show the details of a specific entry in the specified vault. -j returns
+		specified info in json format. if path is ommited, defaults to
+		.ubpm/vault.ubpm.json.
+
+	edit id [-i path] [-tupn]
+		edit an entry from the specified vault. -t, -u, -p and -n specify edit scope
+		and are short for title, username, password and notes respectively. if path
+		is ommited, defaults to .ubpm/vault.ubpm.json.
+
+	rm id [-i path] [--noconfirm]
+		delete the specified entry from the specified vault. --noconfirm skips the
+		deletion confirmation prompt. if path is ommited, defaults to
+		.ubpm/vault.ubpm.json.	
 
 AUTHORS
 	developed by dura5ka <dura5ka@proton.me>. for more information,
