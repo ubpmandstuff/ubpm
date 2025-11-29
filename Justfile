@@ -1,5 +1,5 @@
 binary_name := "ubpm"
-version := "0.1.0+beta"
+version := "0.0.4+alpha"
 destdir := "/usr/local/bin"
 
 run:
