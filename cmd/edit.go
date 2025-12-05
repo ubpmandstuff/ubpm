@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 
 	"dura5ka/ubpm/internal/vault"
 
@@ -73,6 +74,7 @@ func runEdit(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+		title = strings.TrimSpace(title)
 		opts = append(opts, vault.WithTitle(title))
 	}
 	if changeUsername {
@@ -81,6 +83,7 @@ func runEdit(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+		username = strings.TrimSpace(username)
 		opts = append(opts, vault.WithUsername(username))
 	}
 	if changePassword {
@@ -90,6 +93,7 @@ func runEdit(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+		pass = strings.TrimSpace(pass)
 		opts = append(opts, vault.WithPassword(pass))
 	}
 	if changeNotes {
@@ -98,6 +102,7 @@ func runEdit(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+		notes = strings.TrimSpace(notes)
 		opts = append(opts, vault.WithNotes(notes))
 	}
 
