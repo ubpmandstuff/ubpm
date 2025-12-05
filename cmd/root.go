@@ -53,7 +53,7 @@ func Execute() {
 
 // loadVault provides a utility function to open a ubpm vault
 func loadVault(path string) (*vault.Vault, error) {
-	fmt.Fprint(os.Stderr, "enter password: ")
+	fmt.Fprint(os.Stderr, "enter master password: ")
 	pass, err := term.ReadPassword(int(os.Stdin.Fd()))
 	fmt.Fprintln(os.Stderr)
 	if err != nil {

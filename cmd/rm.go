@@ -61,7 +61,6 @@ func runRm(cmd *cobra.Command, args []string) error {
 		fmt.Printf("are you sure you'd like to delete entry %s? [y/N]: ", e.ID)
 		ans, err := reader.ReadString('\n')
 		ans = strings.TrimSpace(ans)
-		fmt.Println(ans)
 		if err != nil {
 			return err
 		}
