@@ -24,7 +24,7 @@ var initCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(initCmd)
 	// default path flag
-	initCmd.Flags().StringP("path", "i", ".", "where to create vault (defaults to current directory)")
+	initCmd.Flags().StringP("path", "i", ".", "where to create vault")
 }
 
 func runInit(cmd *cobra.Command, args []string) error {
