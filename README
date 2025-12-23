@@ -8,46 +8,47 @@ SYNOPSIS
 
 DESCRIPTION
   ubpm is an offline password manager designed to run directly from a usb
-	drive. it uses aes-256-gcm encryption and argon2id key derivation to ensure
-	security of data.
+  drive. it uses aes-256-gcm encryption and argon2id key derivation to ensure
+  security of data.
 
-	the vault is stored as a json file in the .ubpm directory on the usb.
+  the vault is stored as a json file in the .ubpm directory on the usb.
 
 INSTALLATION
-	build from source:
-		$ just build
+  build from source:
+    $ just build
 
 COMMANDS
-	init [-i path]
-		initialize a new vault at the specified path. if path is ommited, defaults
-		to current directory.
-	
-	list [-i path]
-		list all entries in the specified vault. if path is ommited, defaults to
-		.ubpm/vault.ubpm.json.
+  init [-i path]
+    initialize a new vault at the specified path. if path is ommited, defaults
+    to current directory.
 
-	new|add [-i path]
-	  create a new entry in the specified vault. if path is ommited, defaults to
-		.ubpm/vault.ubpm.json.
+  list [-i path]
+    list all entries in the specified vault. if path is ommited, defaults to
+    .ubpm/vault.ubpm.json.
 
-	show id [-i path] [-j] [flags]
-		show the details of a specific entry in the specified vault. -j returns
-		specified info in json format. if path is ommited, defaults to
-		.ubpm/vault.ubpm.json.
+  new|add [-i path]
+    create a new entry in the specified vault. if path is ommited, defaults to
+    .ubpm/vault.ubpm.json.
 
-	edit id [-i path] [-tupn]
-		edit an entry from the specified vault. -t, -u, -p and -n specify edit scope
-		and are short for title, username, password and notes respectively. if path
-		is ommited, defaults to .ubpm/vault.ubpm.json.
+  show id [-i path] [-j] [flags]
+    show the details of a specific entry in the specified vault. -j returns
+    specified info in json format. if path is ommited, defaults to
+    .ubpm/vault.ubpm.json.
 
-	rm id [-i path] [--noconfirm]
-		delete the specified entry from the specified vault. --noconfirm skips the
-		deletion confirmation prompt. if path is ommited, defaults to
-		.ubpm/vault.ubpm.json.	
+  edit id [-i path] [-tupn]
+    edit an entry from the specified vault. -t, -u, -p and -n specify edit scope
+    and are short for title, username, password and notes respectively. if path
+    is ommited, defaults to .ubpm/vault.ubpm.json.
+
+  rm id [-i path] [--noconfirm]
+    delete the specified entry from the specified vault. --noconfirm skips the
+    deletion confirmation prompt. if path is ommited, defaults to
+    .ubpm/vault.ubpm.json.	
 
 AUTHORS
-	developed by dura5ka <dura5ka@proton.me>. for more information,
-	see <https://github.com/ubpmandstuff/ubpm>.
+  developed by dura5ka <dura5ka@proton.me>. for more information,
+  see <https://github.com/ubpmandstuff/ubpm>.
+  the repository also is mirrored to sr.ht: <git.sr.ht/~dura5ka/ubpm>.
 
 COPYRIGHT
-	(c) 2025 dura5ka. licensed under GPL-3.0.
+  (c) 2025 dura5ka. licensed under GPL-3.0.
