@@ -17,7 +17,7 @@ var showCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(showCmd)
 	// default path flag
-	showCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located (defaults to .ubpm/vault.ubpm.json)")
+	showCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located")
 	// individual field flags
 	showCmd.Flags().Bool("id", false, "show only id")
 	showCmd.Flags().Bool("title", false, "show only title")
