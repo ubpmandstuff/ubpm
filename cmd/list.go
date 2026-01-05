@@ -21,7 +21,7 @@ var listCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(listCmd)
 	// default path flag
-	listCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located (defaults to .ubpm/vault.ubpm.json)")
+	listCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located")
 }
 
 func runList(cmd *cobra.Command, args []string) error {

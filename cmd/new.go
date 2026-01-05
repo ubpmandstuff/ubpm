@@ -20,7 +20,7 @@ var newCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(newCmd)
 	// default path flag
-	newCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located (defaults to .ubpm/vault.ubpm.json)")
+	newCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located")
 }
 
 func runNew(cmd *cobra.Command, args []string) error {

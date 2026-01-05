@@ -21,7 +21,7 @@ var editCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(editCmd)
 	// default path flag
-	editCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located (defaults to .ubpm/vault.ubpm.json)")
+	editCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located")
 	// command-specific flags
 	editCmd.Flags().BoolP("title", "t", false, "change only title")
 	editCmd.Flags().BoolP("username", "u", false, "change only username")
