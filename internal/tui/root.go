@@ -33,6 +33,9 @@ type viewport struct {
 
 type state struct {
 	list listState
+	// add  addState
+	// edit editState
+	// rm   rmState
 }
 
 // ::::: view switch funcs :::::
