@@ -33,7 +33,7 @@ type viewport struct {
 
 type state struct {
 	list listState
-	// add  addState
+	add  addState
 	// edit editState
 	// rm   rmState
 }
@@ -44,6 +44,12 @@ func (m *model) switchList() {
 	m.view = "list"
 	m.help.ShowAll = false
 	m.state.list = initListState()
+}
+
+func (m *model) switchAdd() {
+	m.view = "add"
+	m.help.ShowAll = false
+	m.state.add = initAddState()
 }
 
 // ::::: utils :::::
