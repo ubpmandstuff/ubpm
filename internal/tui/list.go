@@ -107,6 +107,8 @@ func (m model) listUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case key.Matches(msg, m.state.list.keys.CloseView):
 			m.state.list.viewing = false
+		case key.Matches(msg, m.state.list.keys.Add):
+			return m, m.switchAdd()
 		case key.Matches(msg, m.state.list.keys.Help):
 			m.help.ShowAll = !m.help.ShowAll
 		case key.Matches(msg, m.state.list.keys.Quit):
@@ -117,10 +119,10 @@ func (m model) listUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) listView() string {
-	var cursorStyle = lipgloss.NewStyle().
+	cursorStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("#7e98e8"))
-	var b1Style = lipgloss.NewStyle().Padding(1, 2).MarginRight(2)
-	var b2Style = lipgloss.NewStyle().
+	b1Style := lipgloss.NewStyle().Padding(1, 2).MarginRight(2)
+	b2Style := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
 		BorderForeground(lipgloss.Color("#7e98e8")).
 		Padding(0, 1)
@@ -146,7 +148,7 @@ func (m model) listView() string {
 
 	if m.state.list.viewing {
 		var b2 strings.Builder
-		var e = m.vault.Data.Entries[m.state.list.cursor]
+		e := m.vault.Data.Entries[m.state.list.cursor]
 
 		fmt.Fprintf(&b2,
 			"title: %s\nusername: %s\npassword: %s\nnotes: %s\n\ncreated at: %s\nmodified at: %s\nid: %s",

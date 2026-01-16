@@ -1,10 +1,10 @@
 package tui
 
 import (
+	"fmt"
 	// "fmt"
 
 	"dura5ka/ubpm/internal/vault"
-	"fmt"
 
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
@@ -40,16 +40,18 @@ type state struct {
 
 // ::::: view switch funcs :::::
 
-func (m *model) switchList() {
+func (m *model) switchList() tea.Cmd {
 	m.view = "list"
 	m.help.ShowAll = false
 	m.state.list = initListState()
+	return nil
 }
 
-func (m *model) switchAdd() {
+func (m *model) switchAdd() tea.Cmd {
 	m.view = "add"
 	m.help.ShowAll = false
 	m.state.add = initAddState()
+	return m.state.add.form.Init()
 }
 
 // ::::: utils :::::
@@ -73,7 +75,12 @@ func InitialModel(v *vault.Vault) model {
 }
 
 func (m model) Init() tea.Cmd {
-	return nil
+	switch m.view {
+	case "add":
+		return m.state.add.form.Init()
+	default:
+		return nil
+	}
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -95,6 +102,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch m.view {
 	case "list":
 		return m.listUpdate(msg)
+	case "add":
+		return m.addUpdate(msg)
 	default:
 		return m, nil
 	}
@@ -107,6 +116,8 @@ func (m model) View() string {
 	switch m.view {
 	case "list":
 		return m.listView()
+	case "add":
+		return m.addView()
 	default:
 		return m.listView()
 	}
