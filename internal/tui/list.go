@@ -109,6 +109,8 @@ func (m model) listUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.state.list.viewing = false
 		case key.Matches(msg, m.state.list.keys.Add):
 			return m, m.switchAdd()
+		case key.Matches(msg, m.state.list.keys.Edit):
+			return m, m.switchEdit(m.vault.Data.Entries[m.state.list.cursor])
 		case key.Matches(msg, m.state.list.keys.Help):
 			m.help.ShowAll = !m.help.ShowAll
 		case key.Matches(msg, m.state.list.keys.Quit):
