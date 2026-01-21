@@ -3,11 +3,12 @@ package gui
 import (
 	"log"
 
+	"fyne.io/fyne"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/widget"
 )
 
-func main() {
+func MakeWindow() fyne.Window {
 	myApp := app.New()
 	myWindow := myApp.NewWindow("Button Widget")
 
@@ -15,5 +16,5 @@ func main() {
 		log.Println("Here we go!")
 	})
 	myWindow.SetContent(content)
-	myWindow.ShowAndRun()
+	return myWindow
 }
