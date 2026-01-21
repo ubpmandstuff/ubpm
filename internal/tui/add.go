@@ -53,10 +53,10 @@ var addKeys = addKeymap{
 type addState struct {
 	keys addKeymap
 	form *huh.Form
-	val  *values
+	val  *addValues
 }
 
-type values struct {
+type addValues struct {
 	title    string
 	username string
 	password string
@@ -66,7 +66,7 @@ type values struct {
 func initAddState() addState {
 	s := addState{
 		keys: addKeys,
-		val:  &values{},
+		val:  &addValues{},
 	}
 
 	s.form = huh.NewForm(
