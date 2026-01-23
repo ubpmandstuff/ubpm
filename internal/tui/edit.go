@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"fmt"
 	"strings"
 
 	"dura5ka/ubpm/internal/vault"
@@ -8,7 +9,7 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/huh"
-	// "github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/lipgloss"
 )
 
 // addKeymap is a struct defining the keys used in the add view
@@ -166,13 +167,15 @@ func (m model) editView() string {
 	// 	BottomRight: "/",
 	// }
 	// b1Style := lipgloss.NewStyle().
-	// 	Padding(1, 2).BorderStyle(coolBorder).
+	//  Padding(1, 2).BorderStyle(coolBorder).
 	// 	BorderForeground(lipgloss.Color("#7e98e8")).
 	// 	Margin(1, 1)
 
+	b1Style := lipgloss.NewStyle().Padding(1, 2)
+
 	var b1 strings.Builder
 
-	b1.WriteString("adding entry\n\n")
+	b1.WriteString(fmt.Sprintf("editing entry %s\n\n", m.state.edit.id[:8]))
 	b1.WriteString(m.state.edit.form.View() + "\n\n")
 
 	combined := cEditKeymap{
@@ -181,7 +184,7 @@ func (m model) editView() string {
 	}
 	b1.WriteString(m.help.View(combined))
 
-	out := b1.String()
+	out := b1Style.Render(b1.String())
 
 	return out
 }
