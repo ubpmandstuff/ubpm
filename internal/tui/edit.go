@@ -175,7 +175,7 @@ func (m model) editView() string {
 
 	var b1 strings.Builder
 
-	b1.WriteString(fmt.Sprintf("editing entry %s\n\n", m.state.edit.id[:8]))
+	fmt.Fprintf(&b1, "editing entry %s\n\n", m.state.edit.id[:8])
 	b1.WriteString(m.state.edit.form.View() + "\n\n")
 
 	combined := cEditKeymap{
