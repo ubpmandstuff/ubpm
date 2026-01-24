@@ -3,6 +3,7 @@ package tui
 
 import (
 	"fmt"
+	"time"
 	// "fmt"
 
 	"dura5ka/ubpm/internal/vault"
@@ -36,7 +37,7 @@ type state struct {
 	list listState
 	add  addState
 	edit editState
-	rm   rmState
+	rm   *rmState
 }
 
 // ::::: view switch funcs :::::
@@ -75,6 +76,14 @@ func (m *model) isViewportGood() bool {
 	return m.vp.width >= 40 && m.vp.height >= 10
 }
 
+type clearErrMsg struct{}
+
+func clearErrDelayed() tea.Cmd {
+	return tea.Tick(3*time.Second, func(time.Time) tea.Msg {
+		return clearErrMsg{}
+	})
+}
+
 // InitialModel initializes the model for launching the app
 func InitialModel(v *vault.Vault) model {
 	h := help.New()
@@ -98,6 +107,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.vp.width = msg.Width
 		m.vp.height = msg.Height
+	case clearErrMsg:
+		m.errMsg = nil
 	}
 	if !m.isViewportGood() {
 		switch msg := msg.(type) {
