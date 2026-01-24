@@ -36,7 +36,7 @@ type state struct {
 	list listState
 	add  addState
 	edit editState
-	// rm   rmState
+	rm   rmState
 }
 
 // ::::: view switch funcs :::::
@@ -60,6 +60,13 @@ func (m *model) switchEdit(e vault.Entry) tea.Cmd {
 	m.help.ShowAll = false
 	m.state.edit = initEditState(e)
 	return m.state.edit.form.Init()
+}
+
+func (m *model) switchRm(e vault.Entry) tea.Cmd {
+	m.view = "rm"
+	m.help.ShowAll = false
+	m.state.rm = initRmState(e)
+	return m.state.rm.form.Init()
 }
 
 // ::::: utils :::::
@@ -109,6 +116,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.addUpdate(msg)
 	case "edit":
 		return m.editUpdate(msg)
+	case "rm":
+		return m.rmUpdate(msg)
 	default:
 		return m, nil
 	}
@@ -125,6 +134,8 @@ func (m model) View() string {
 		return m.addView()
 	case "edit":
 		return m.editView()
+	case "rm":
+		return m.rmView()
 	default:
 		return m.listView()
 	}
