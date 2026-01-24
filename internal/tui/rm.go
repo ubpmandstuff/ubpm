@@ -58,14 +58,14 @@ type rmState struct {
 	id      string
 }
 
-func initRmState(e vault.Entry) rmState {
-	s := rmState{
+func initRmState(e vault.Entry) *rmState {
+	s := &rmState{
 		keys:    rmKeys,
 		confirm: false,
 		id:      e.ID,
 	}
 
-	title := fmt.Sprintf("are you sure you want to delete %s?", e.ID[:8])
+	title := fmt.Sprintf("are you sure you want to delete entry %s?", e.ID[:8])
 
 	s.form = huh.NewForm(
 		huh.NewGroup(
@@ -87,12 +87,10 @@ func (m model) rmUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if m.state.rm.form.State == huh.StateCompleted {
 		if m.state.rm.confirm {
 			m.vault.RemoveEntry(m.state.rm.id)
-			// if err != nil {
-			// 	m.errMsg = err
-			// }
 			return m, m.switchList()
 		} else {
-			return m, m.switchList()
+			m.errMsg = fmt.Errorf("operation aborted: delete entry %s", m.state.rm.id[:8])
+			return m, tea.Batch(m.switchList(), clearErrDelayed())
 		}
 	}
 

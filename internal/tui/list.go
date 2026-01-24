@@ -130,6 +130,10 @@ func (m model) listView() string {
 		Border(lipgloss.RoundedBorder()).
 		BorderForeground(lipgloss.Color("#7e98e8")).
 		Padding(0, 1)
+	errBox := lipgloss.NewStyle().
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(lipgloss.Color("#d8647e")).
+		Padding(0, 1)
 
 	var b1 strings.Builder
 
@@ -145,6 +149,10 @@ func (m model) listView() string {
 		}
 	} else {
 		b1.WriteString("no entries\n")
+	}
+
+	if m.errMsg != nil {
+		b1.WriteString("\n" + errBox.Render(m.errMsg.Error()) + "\n")
 	}
 
 	b1.WriteString("\n")
