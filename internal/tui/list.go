@@ -13,8 +13,6 @@ import (
 type listKeymap struct {
 	Up        key.Binding
 	Down      key.Binding
-	View      key.Binding
-	CloseView key.Binding
 	Add       key.Binding
 	Edit      key.Binding
 	Rm        key.Binding
@@ -30,7 +28,7 @@ func (k listKeymap) ShortHelp() []key.Binding {
 // FullHelp returns the keys to show in complete help view
 func (k listKeymap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Up, k.Down, k.View, k.CloseView},
+		{k.Up, k.Down},
 		{k.Add, k.Edit, k.Rm},
 		{k.Help, k.Quit},
 	}
@@ -44,14 +42,6 @@ var listKeys = listKeymap{
 	Down: key.NewBinding(
 		key.WithKeys("down", "j"),
 		key.WithHelp("↓/j", "move down"),
-	),
-	View: key.NewBinding(
-		key.WithKeys("enter"),
-		key.WithHelp("enter", "view entry"),
-	),
-	CloseView: key.NewBinding(
-		key.WithKeys("esc"),
-		key.WithHelp("esc", "close view"),
 	),
 	Add: key.NewBinding(
 		key.WithKeys("a"),
@@ -78,14 +68,12 @@ var listKeys = listKeymap{
 type listState struct {
 	cursor  int
 	keys    listKeymap
-	viewing bool
 }
 
 func initListState() listState {
 	return listState{
 		cursor:  0,
 		keys:    listKeys,
-		viewing: false,
 	}
 }
 
@@ -101,12 +89,6 @@ func (m model) listUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.state.list.cursor < len(m.vault.Data.Entries)-1 {
 				m.state.list.cursor++
 			}
-		case key.Matches(msg, m.state.list.keys.View):
-			if len(m.vault.Data.Entries) > 0 {
-				m.state.list.viewing = true
-			}
-		case key.Matches(msg, m.state.list.keys.CloseView):
-			m.state.list.viewing = false
 		case key.Matches(msg, m.state.list.keys.Add):
 			return m, m.switchAdd()
 		case key.Matches(msg, m.state.list.keys.Edit):
@@ -158,7 +140,7 @@ func (m model) listView() string {
 	b1.WriteString("\n")
 	b1.WriteString(m.help.View(m.state.list.keys))
 
-	if m.state.list.viewing {
+	if len(m.vault.Data.Entries) > 0 {
 		var b2 strings.Builder
 		e := m.vault.Data.Entries[m.state.list.cursor]
 
