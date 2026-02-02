@@ -3,7 +3,6 @@ module dura5ka/ubpm
 go 1.25.3
 
 require (
-	fyne.io/fyne v1.4.3
 	fyne.io/fyne/v2 v2.7.2
 	github.com/charmbracelet/log v0.4.2
 	github.com/spf13/cobra v1.10.1
