@@ -15,20 +15,26 @@ var guiCmd = &cobra.Command{
 	RunE:  runGui,
 }
 
+func init() {
+	rootCmd.AddCommand(guiCmd)
+	// default path flag
+	guiCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located (defaults to .ubpm/vault.ubpm.json)")
+}
+
 func runGui(cmd *cobra.Command, args []string) error {
 	// init path variable
-	path, err := cmd.Flags().GetString("path")
+	_, err := cmd.Flags().GetString("path")
 	if err != nil {
 		return err
 	}
 
 	// prompt user for password and decrypt vault
-	_, err = loadVault(path)
-	if err != nil {
-		return err
-	}
+	// commented out, to be implemented in the gui
+	// _, err = loadVault(path)
+	// if err != nil {
+	// 	return err
+	// }
 
-	window := gui.MakeWindow()
-	window.ShowAndRun()
+	gui.MakeWindow()
 	return nil
 }

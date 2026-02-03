@@ -5,14 +5,13 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/container" //you'll need that @Kikuoku
-	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/container" // you'll need that @Kikuoku
 	"fyne.io/fyne/v2/widget"
 )
 
 func MakeWindow() {
 	myApp := app.New()
-	myWindow := myApp.NewWindow("UBPM Password Manager")
+	myWindow := myApp.NewWindow("ubpm - usb-based password manager")
 	myWindow.Resize(fyne.NewSize(800, 600))
 	pathEntry := widget.NewEntry()
 	pathEntry.SetPlaceHolder("Vault file path")
@@ -20,7 +19,6 @@ func MakeWindow() {
 	passwordEntry.SetPlaceHolder("Master Password")
 
 	loginButton := widget.NewButton("Open and Unlock Vault", func() {
-
 		fmt.Println("Placeholder for unlocking logic.") // Заглушка
 		showMainManagerScreen(myWindow)                 // Заглушка
 	})
@@ -44,12 +42,13 @@ func showMainManagerScreen(myWindow fyne.Window) { // Заглушка
 		fmt.Println("Add entry UI logic needed.")
 	})
 
-	saveButton := widget.NewButton("Save All Changes", func() {
-		fmt.Println("Save logic needed.")
-	})
+	// saveButton := widget.NewButton("Save All Changes", func() {
+	// 	fmt.Println("Save logic needed.")
+	// })
 
 	mainContent := container.NewBorder(
-		container.NewHBox(widget.NewLabel("Password Entries:"), layout.NewSpacer(), saveButton),
+		// container.NewHBox(widget.NewLabel("Password Entries:"), layout.NewSpacer(), saveButton),
+		container.NewHBox(widget.NewLabel("Password Entries:")),
 		addButton,
 		nil,
 		nil,
