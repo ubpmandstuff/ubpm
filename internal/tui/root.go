@@ -4,7 +4,6 @@ package tui
 import (
 	"fmt"
 	"time"
-	// "fmt"
 
 	"dura5ka/ubpm/internal/vault"
 
@@ -14,6 +13,12 @@ import (
 )
 
 // ::::: types :::::
+
+// minWidth is minimum width for app to function properly
+const minWidth int = 40
+
+// minHeight is minimum height for app to function properly
+const minHeight int = 10
 
 // model is the central model of the bubble tea app
 type model struct {
@@ -73,7 +78,7 @@ func (m *model) switchRm(e vault.Entry) tea.Cmd {
 // ::::: utils :::::
 
 func (m *model) isViewportGood() bool {
-	return m.vp.width >= 40 && m.vp.height >= 10
+	return m.vp.width >= minWidth && m.vp.height >= minHeight
 }
 
 type clearErrMsg struct{}
@@ -83,6 +88,8 @@ func clearErrDelayed() tea.Cmd {
 		return clearErrMsg{}
 	})
 }
+
+// ::::: the app itself :::::
 
 // InitialModel initializes the model for launching the app
 func InitialModel(v *vault.Vault) model {
