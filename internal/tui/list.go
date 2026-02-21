@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/bubbles/key"
+	// "github.com/charmbracelet/bubbles/list" // TODO replace custom list w bubbles/list
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -29,8 +30,8 @@ func (k listKeymap) ShortHelp() []key.Binding {
 // FullHelp returns the keys to show in complete help view
 func (k listKeymap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Up, k.Down, k.SeePass},
-		{k.Add, k.Edit, k.Rm},
+		{k.Up, k.Down},
+		{k.SeePass, k.Add, k.Edit, k.Rm},
 		{k.Help, k.Quit},
 	}
 }
