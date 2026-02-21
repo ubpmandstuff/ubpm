@@ -1,3 +1,4 @@
+/* Package tui provides a terminal-based user interface for ubpm */
 package tui
 
 import (
@@ -34,7 +35,7 @@ type viewport struct {
 type state struct {
 	list listState
 	add  addState
-	// edit editState
+	edit editState
 	// rm   rmState
 }
 
@@ -52,6 +53,13 @@ func (m *model) switchAdd() tea.Cmd {
 	m.help.ShowAll = false
 	m.state.add = initAddState()
 	return m.state.add.form.Init()
+}
+
+func (m *model) switchEdit(e vault.Entry) tea.Cmd {
+	m.view = "edit"
+	m.help.ShowAll = false
+	m.state.edit = initEditState(e)
+	return m.state.edit.form.Init()
 }
 
 // ::::: utils :::::
@@ -75,12 +83,7 @@ func InitialModel(v *vault.Vault) model {
 }
 
 func (m model) Init() tea.Cmd {
-	switch m.view {
-	case "add":
-		return m.state.add.form.Init()
-	default:
-		return nil
-	}
+	return nil
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -104,6 +107,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.listUpdate(msg)
 	case "add":
 		return m.addUpdate(msg)
+	case "edit":
+		return m.editUpdate(msg)
 	default:
 		return m, nil
 	}
@@ -118,6 +123,8 @@ func (m model) View() string {
 		return m.listView()
 	case "add":
 		return m.addView()
+	case "edit":
+		return m.editView()
 	default:
 		return m.listView()
 	}
