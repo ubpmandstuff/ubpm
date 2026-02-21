@@ -18,7 +18,7 @@ var rmCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(rmCmd)
 	// default path flag
-	rmCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located (defaults to .ubpm/vault.ubpm.json)")
+	rmCmd.Flags().StringP("path", "i", ".ubpm/vault.ubpm.json", "where the vault is located")
 	// command-specific flags
 	rmCmd.Flags().Bool("noconfirm", false, "skip confirmation")
 }
