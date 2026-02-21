@@ -111,6 +111,8 @@ func (m model) listUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, m.switchAdd()
 		case key.Matches(msg, m.state.list.keys.Edit):
 			return m, m.switchEdit(m.vault.Data.Entries[m.state.list.cursor])
+		case key.Matches(msg, m.state.list.keys.Rm):
+			return m, m.switchRm(m.vault.Data.Entries[m.state.list.cursor])
 		case key.Matches(msg, m.state.list.keys.Help):
 			m.help.ShowAll = !m.help.ShowAll
 		case key.Matches(msg, m.state.list.keys.Quit):
@@ -131,7 +133,7 @@ func (m model) listView() string {
 
 	var b1 strings.Builder
 
-	b1.WriteString("this is currently very wip, press q to quit\n\n")
+	b1.WriteString("ubpm, a usb-based password manager\n\n")
 
 	if len(m.vault.Data.Entries) > 0 {
 		for i, e := range m.vault.Data.Entries {
