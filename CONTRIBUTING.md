@@ -16,11 +16,15 @@ bugfix, and `<description>` is the description.
 
 ## commits
 
-we use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). it helps us understand each commit.
+i would prefer you use a simple format for commits: `<scope>: <description>`.
 
-the general format is `<type>[optional scope]: <description>`.
+ alternatively, you can use 
+ [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
-typically, we use these types:
+the general format for conventional commits is
+`<type>[optional scope]: <description>`.
+
+typically, the following types are enough:
 - `feat`: a new feature (e.g. `feat: add list subcommand`)
 - `fix`: a bugfix (e.g. `fix: stop generating new nonce on decrypt attempt`)
 - `chore`: maintenance tasks (e.g. `chore: update version`)
