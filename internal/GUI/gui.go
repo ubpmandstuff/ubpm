@@ -1,7 +1,7 @@
 package gui
 
 import (
-	"ubpm/internal/vault"
+	"dura5ka/ubpm/internal/vault"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
