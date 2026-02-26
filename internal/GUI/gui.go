@@ -1,3 +1,4 @@
+// Package gui provides the graphical user interface for ubpm
 package gui
 
 import (
@@ -25,7 +26,7 @@ func MakeWindow() {
 			dialog.ShowError(err, myWindow)
 			return
 		}
-		showMainManagerScreen(myWindow)
+		showMainManagerScreen(myWindow, v)
 	})
 
 	loginScreen := container.NewVBox(
@@ -39,8 +40,7 @@ func MakeWindow() {
 	myWindow.ShowAndRun()
 }
 
-func showMainManagerScreen(myWindow fyne.Window) {
-
+func showMainManagerScreen(w fyne.Window, v *vault.Vault) {
 	listLabel := widget.NewLabel("Welcome! Entries will appear here once loaded.")
 
 	addButton := widget.NewButton("Add New Entry", func() {
@@ -54,31 +54,30 @@ func showMainManagerScreen(myWindow fyne.Window) {
 			{Text: "Password", Widget: passEntry},
 			{Text: "Notes", Widget: notesEntry},
 		}
-	})
-	dialog.ShowForm("Add New Password", "Add", "Cancel", formItem, func(confirm bool) {
-		if !confirm {
-			return
-		}
-		err := v.AddEntry(
-			titleEntry.Text,
-			userEntry.Text,
-			passEntry.Text,
-			notesEntry.Text,
-		)
-
-		if err != nil {
-			dialog.ShowError(err, myWindow)
-		}
+		dialog.ShowForm("Adding New Entry", "Add", "Cancel", formItem, func(confirm bool) {
+			if !confirm {
+				return
+			}
+			err := v.AddEntry(
+				titleEntry.Text,
+				userEntry.Text,
+				passEntry.Text,
+				notesEntry.Text,
+			)
+			if err != nil {
+				dialog.ShowError(err, w)
+			}
+		}, w)
 	})
 
 	mainContent := container.NewBorder(
-		container.NewHBox(widget.NewLabel("Password Entries:")),
+		container.NewHBox(widget.NewLabel("Entries:")),
 		addButton,
 		nil,
 		nil,
 		listLabel, // Заменить на widget.NewList
 	)
 
-	myWindow.SetContent(mainContent)
-	myWindow.Content().Refresh()
+	w.SetContent(mainContent)
+	w.Content().Refresh()
 }
