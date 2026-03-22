@@ -3,6 +3,7 @@ package gui
 
 import (
 	"dura5ka/ubpm/internal/vault"
+	"fmt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -40,8 +41,30 @@ func MakeWindow() {
 	myWindow.ShowAndRun()
 }
 
-func showMainManagerScreen(w fyne.Window, v *vault.Vault) {
-	listLabel := widget.NewLabel("Welcome! Entries will appear here once loaded.")
+func showMainManagerScreen(myWindow fyne.Window, v *vault.Vault) {
+	entries := v.Entries()
+	var selectedIndex int = -1
+
+	entryList := widget.NewList(
+		func() int {
+			return len(entries)
+		},
+		func() fyne.CanvasObject {
+			return widget.NewLabel("")
+		},
+		func(i widget.ListItemID, o fyne.CanvasObject) {
+			o.(*widget.Label).SetText(entries[i].Title)
+		},
+	)
+	entryList.OnSelected = func(id widget.ListItemID) {
+		selectedIndex = id
+		entry := entries[id]
+		dialog.ShowInformation(
+			entry.Title,
+			fmt.Sprintf("Username: %s\nPassword: %s\nNotes: %s", entry.Username, entry.Password, entry.Notes),
+			myWindow,
+		)
+	}
 
 	addButton := widget.NewButton("Add New Entry", func() {
 		titleEntry := widget.NewEntry()
@@ -54,7 +77,8 @@ func showMainManagerScreen(w fyne.Window, v *vault.Vault) {
 			{Text: "Password", Widget: passEntry},
 			{Text: "Notes", Widget: notesEntry},
 		}
-		dialog.ShowForm("Adding New Entry", "Add", "Cancel", formItem, func(confirm bool) {
+
+		dialog.ShowForm("Add New Password", "Add", "Cancel", formItem, func(confirm bool) {
 			if !confirm {
 				return
 			}
@@ -65,19 +89,40 @@ func showMainManagerScreen(w fyne.Window, v *vault.Vault) {
 				notesEntry.Text,
 			)
 			if err != nil {
-				dialog.ShowError(err, w)
+				dialog.ShowError(err, myWindow)
+			} else {
+				entries = v.Entries()
+				entryList.Refresh()
 			}
-		}, w)
+		}, myWindow)
 	})
 
+	removeButton := widget.NewButton("Remove Entry", func() {
+		if selectedIndex < 0 || selectedIndex >= len(entries) {
+			dialog.ShowInformation("No Selection", "Please select an entry to remove.", myWindow)
+			return
+		}
+		entryID := entries[selectedIndex].ID
+		err := v.RemoveEntry(entryID)
+		if err != nil {
+			dialog.ShowError(err, myWindow)
+			return
+		}
+		entries = v.Entries()
+		entryList.Refresh()
+		selectedIndex = -1
+	})
+
+	buttons := container.NewHBox(addButton, removeButton)
+
 	mainContent := container.NewBorder(
-		container.NewHBox(widget.NewLabel("Entries:")),
-		addButton,
+		container.NewHBox(widget.NewLabel("Password Entries:")),
+		buttons,
 		nil,
 		nil,
-		listLabel, // Заменить на widget.NewList
+		entryList,
 	)
 
-	w.SetContent(mainContent)
-	w.Content().Refresh()
+	myWindow.SetContent(mainContent)
+	myWindow.Content().Refresh()
 }

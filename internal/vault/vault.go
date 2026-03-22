@@ -240,3 +240,6 @@ func (v *Vault) RemoveEntry(id string) error {
 	v.Data.Entries = append(v.Data.Entries[:i], v.Data.Entries[i+1:]...)
 	return v.Save()
 }
+func (v *Vault) Entries() []Entry {
+	return v.Data.Entries
+}
