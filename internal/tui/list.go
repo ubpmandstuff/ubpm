@@ -154,8 +154,10 @@ func (m model) listView() string {
 
 	var b1 strings.Builder
 
+	// heading
 	b1.WriteString("ubpm, a usb-based password manager\n\n")
 
+	// entry list
 	if len(m.vault.Data.Entries) > 0 {
 		for i, e := range m.vault.Data.Entries {
 			if m.state.list.cursor == i {

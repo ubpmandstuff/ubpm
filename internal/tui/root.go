@@ -87,10 +87,13 @@ func (m *model) switchLocked(path string) tea.Cmd {
 
 // ::::: utils :::::
 
+// isViewportGood checks whether the viewport is larger or equal to
+// minimum width and height
 func (m *model) isViewportGood() bool {
 	return m.vp.width >= minWidth && m.vp.height >= minHeight
 }
 
+// clearErrMsg is a bubbletea message clearing the error
 type clearErrMsg struct{}
 
 func clearErrDelayed() tea.Cmd {
@@ -159,7 +162,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	if !m.isViewportGood() {
-		return fmt.Sprintf("given viewport is not large enough for comfortable use.\n\nviewport is %dx%d.\n\npress q to quit", m.vp.width, m.vp.height)
+		return fmt.Sprintf(
+			"viewport is too small for the application\n\nviewport is %dx%d\n\nrecommended is %dx%d\n\npress q to quit",
+			m.vp.width, m.vp.height, minWidth, minHeight,
+		)
 	}
 	switch m.view {
 	case "list":

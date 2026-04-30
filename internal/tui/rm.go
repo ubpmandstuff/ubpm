@@ -65,7 +65,7 @@ func initRmState(e vault.Entry) *rmState {
 		id:      e.ID,
 	}
 
-	title := fmt.Sprintf("are you sure you want to delete entry %s?", e.ID[:8])
+	title := fmt.Sprintf("are you sure you'd like to delete entry %s (%s)?", e.Title, e.ID[:8])
 
 	s.form = huh.NewForm(
 		huh.NewGroup(
