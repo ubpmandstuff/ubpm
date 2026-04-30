@@ -18,6 +18,7 @@ type listKeymap struct {
 	Edit    key.Binding
 	Rm      key.Binding
 	SeePass key.Binding
+	Lock    key.Binding
 	Help    key.Binding
 	Quit    key.Binding
 }
@@ -61,6 +62,10 @@ var listKeys = listKeymap{
 		key.WithKeys(" ", "v"),
 		key.WithHelp("v/space", "peek passwd"),
 	),
+	Lock: key.NewBinding(
+		key.WithKeys("ctrl+l"),
+		key.WithHelp("ctrl+l", "lock vault"),
+	),
 	Help: key.NewBinding(
 		key.WithKeys("?"),
 		key.WithHelp("?", "show keybindings"),
@@ -89,29 +94,44 @@ func (m model) listUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch {
+
+		// cursor movement
 		case key.Matches(msg, m.state.list.keys.Up):
 			m.state.list.passwdVisible = false
 			if m.state.list.cursor > 0 {
 				m.state.list.cursor--
 			}
+		
 		case key.Matches(msg, m.state.list.keys.Down):
 			m.state.list.passwdVisible = false
 			if m.state.list.cursor < len(m.vault.Data.Entries)-1 {
 				m.state.list.cursor++
 			}
+
+		// change views
 		case key.Matches(msg, m.state.list.keys.Add):
 			m.state.list.passwdVisible = false
 			return m, m.switchAdd()
+
 		case key.Matches(msg, m.state.list.keys.Edit):
 			m.state.list.passwdVisible = false
 			return m, m.switchEdit(m.vault.Data.Entries[m.state.list.cursor])
+
 		case key.Matches(msg, m.state.list.keys.Rm):
 			m.state.list.passwdVisible = false
 			return m, m.switchRm(m.vault.Data.Entries[m.state.list.cursor])
+
+		case key.Matches(msg, m.state.list.keys.Lock):
+			m.state.list.passwdVisible = false
+			return m, m.switchLocked(m.vault.Path)
+
+		// generic actions
 		case key.Matches(msg, m.state.list.keys.SeePass):
 			m.state.list.passwdVisible = !m.state.list.passwdVisible
+
 		case key.Matches(msg, m.state.list.keys.Help):
 			m.help.ShowAll = !m.help.ShowAll
+		
 		case key.Matches(msg, m.state.list.keys.Quit):
 			return m, tea.Quit
 		}

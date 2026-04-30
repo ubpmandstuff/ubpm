@@ -12,11 +12,12 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-// addKeymap is a struct defining the keys used in the add view
+// editKeymap is a struct defining the keys used in the add view
 type editKeymap struct {
-	Help key.Binding
-	Back key.Binding
-	Quit key.Binding
+	SeePass key.Binding
+	Help    key.Binding
+	Back    key.Binding
+	Quit    key.Binding
 }
 
 type cEditKeymap struct {

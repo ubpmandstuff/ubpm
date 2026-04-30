@@ -23,7 +23,7 @@ const minHeight int = 10
 // model is the central model of the bubble tea app
 type model struct {
 	cursor int
-	view   string // "list"|"add"|"edit"|"rm"
+	view   string // "list"|"add"|"edit"|"rm"|"locked"
 	vault  *vault.Vault
 	help   help.Model
 	vp     viewport
@@ -39,10 +39,11 @@ type viewport struct {
 }
 
 type state struct {
-	list listState
-	add  addState
-	edit editState
-	rm   *rmState
+	list   listState
+	add    addState
+	edit   editState
+	rm     *rmState
+	locked *lockedState
 }
 
 // ::::: view switch funcs :::::
@@ -75,6 +76,15 @@ func (m *model) switchRm(e vault.Entry) tea.Cmd {
 	return m.state.rm.form.Init()
 }
 
+func (m *model) switchLocked(path string) tea.Cmd {
+	m.view = "locked"
+	m.help.ShowAll = false
+	m.state.locked = initLockedState(path)
+	m.vault.Wipe()
+	m.vault = nil
+	return tea.Sequence(clearErr, m.state.locked.form.Init())
+}
+
 // ::::: utils :::::
 
 func (m *model) isViewportGood() bool {
@@ -87,6 +97,10 @@ func clearErrDelayed() tea.Cmd {
 	return tea.Tick(3*time.Second, func(time.Time) tea.Msg {
 		return clearErrMsg{}
 	})
+}
+
+func clearErr() tea.Msg {
+	return clearErrMsg{}
 }
 
 // ::::: the app itself :::::
@@ -136,8 +150,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.editUpdate(msg)
 	case "rm":
 		return m.rmUpdate(msg)
+	case "locked":
+		return m.lockedUpdate(msg)
 	default:
-		return m, nil
+		return m, m.switchList()
 	}
 }
 
@@ -154,6 +170,8 @@ func (m model) View() string {
 		return m.editView()
 	case "rm":
 		return m.rmView()
+	case "locked":
+		return m.lockedView()
 	default:
 		return m.listView()
 	}

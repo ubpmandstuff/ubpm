@@ -115,7 +115,7 @@ func Open(path string, password []byte) (*Vault, error) {
 	}, nil
 }
 
-// Generate generates and returns a unique id. this is a utility function for
+// GenerateID generates and returns a unique id. this is a utility function for
 // identifying entries.
 func GenerateID() string {
 	b := make([]byte, 16) // 32 chars
@@ -156,6 +156,20 @@ func (v *Vault) Save() error {
 	}
 
 	return nil
+}
+
+// Wipe provides a method for securely wiping the vault from RAM.
+// this is primarily to be used for the tui.
+func (v *Vault) Wipe() {
+	for i := range v.Key {
+		v.Key[i] = 0
+	}
+	for i := range v.Salt {
+		v.Key[i] = 0
+	}
+	v.Key = nil
+	v.Salt = nil
+	v.Data = nil
 }
 
 // AddEntry adds an entry from specified args to a ubpm vault
