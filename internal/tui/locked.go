@@ -13,7 +13,6 @@ import (
 
 type lockedKeymap struct {
 	SeePass key.Binding
-	Help    key.Binding
 	Quit    key.Binding
 }
 
@@ -24,13 +23,13 @@ type cLockedKeymap struct {
 
 func (c cLockedKeymap) ShortHelp() []key.Binding {
 	binds := c.f.KeyBinds()
-	return append(binds, c.k.SeePass, c.k.Help, c.k.Quit)
+	return append(binds, c.k.SeePass, c.k.Quit)
 }
 
 func (c cLockedKeymap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		c.f.KeyBinds(),
-		{c.k.SeePass, c.k.Help, c.k.Quit},
+		{c.k.SeePass, c.k.Quit},
 	}
 }
 
@@ -38,10 +37,6 @@ var lockedKeys = lockedKeymap{
 	SeePass: key.NewBinding(
 		key.WithKeys("f2"),
 		key.WithHelp("f2", "peek passwd"),
-	),
-	Help: key.NewBinding(
-		key.WithKeys("f1"),
-		key.WithHelp("f1", "show keybindings"),
 	),
 	Quit: key.NewBinding(
 		key.WithKeys("q", "ctrl+c"),
