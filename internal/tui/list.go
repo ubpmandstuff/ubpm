@@ -25,7 +25,7 @@ type listKeymap struct {
 
 // ShortHelp returns the keys to show in compact help view
 func (k listKeymap) ShortHelp() []key.Binding {
-	return []key.Binding{k.Help, k.Quit}
+	return []key.Binding{k.Lock, k.Help, k.Quit}
 }
 
 // FullHelp returns the keys to show in complete help view
@@ -33,7 +33,7 @@ func (k listKeymap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.Up, k.Down},
 		{k.SeePass, k.Add, k.Edit, k.Rm},
-		{k.Help, k.Quit},
+		{k.Lock, k.Help, k.Quit},
 	}
 }
 
