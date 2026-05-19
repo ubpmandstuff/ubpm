@@ -132,7 +132,7 @@ var boxStyle lipgloss.Style = lipgloss.NewStyle().Padding(1, 2).MarginRight(2)
 // non-existent view (intentionally or due to an error)
 func noSuchView() string {
 	var b1 strings.Builder
-	b1.WriteString("hey! you're trying to access a non-existent view.\n")
+	b1.WriteString("hey! you're probably trying to access a non-existent view.\n")
 	b1.WriteString("this must have happened due to some kind of error.\n")
 	b1.WriteString("\npress esc to load back into the list view.")
 	return b1.String()
