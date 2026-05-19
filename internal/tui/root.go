@@ -3,13 +3,14 @@ package tui
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"dura5ka/ubpm/internal/vault"
 
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
-	// "github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/lipgloss"
 )
 
 // ::::: types :::::
@@ -40,6 +41,7 @@ type viewport struct {
 
 type state struct {
 	list   listState
+	view   viewState
 	add    addState
 	edit   editState
 	rm     *rmState
@@ -52,6 +54,13 @@ func (m *model) switchList() tea.Cmd {
 	m.view = "list"
 	m.help.ShowAll = false
 	m.state.list = initListState()
+	return nil
+}
+
+func (m *model) switchView(e vault.Entry) tea.Cmd {
+	m.view = "view"
+	m.help.ShowAll = false
+	m.state.view = initViewState(e)
 	return nil
 }
 
@@ -106,6 +115,41 @@ func clearErr() tea.Msg {
 	return clearErrMsg{}
 }
 
+const headerBanner = "██ UBPM ████▓▒░"
+
+// brandStyle defines the default brand style
+var brandStyle lipgloss.Style = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("#7e98e8"))
+
+// errorStyle defines the default error text style
+var errorStyle lipgloss.Style = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("#d8647e"))
+
+// boxStyle is the default outer padding applied to every screen in View
+var boxStyle lipgloss.Style = lipgloss.NewStyle().Padding(1, 2).MarginRight(2)
+
+// noSuchView returns the default view shown when one switches to a
+// non-existent view (intentionally or due to an error)
+func noSuchView() string {
+	var b1 strings.Builder
+	b1.WriteString("hey! you're trying to access a non-existent view.\n")
+	b1.WriteString("this must have happened due to some kind of error.\n")
+	b1.WriteString("\npress esc to load back into the list view.")
+	return b1.String()
+}
+
+// noSuchViewUpd provides keybinding handling for the noSuchView view
+func (m model) noSuchViewUpd(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "esc":
+			return m, m.switchList()
+		}
+	}
+	return m, nil
+}
+
 // ::::: the app itself :::::
 
 // InitialModel initializes the model for launching the app
@@ -147,6 +191,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch m.view {
 	case "list":
 		return m.listUpdate(msg)
+	case "view":
+		return m.viewUpdate(msg)
 	case "add":
 		return m.addUpdate(msg)
 	case "edit":
@@ -156,7 +202,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case "locked":
 		return m.lockedUpdate(msg)
 	default:
-		return m, m.switchList()
+		return m.noSuchViewUpd(msg)
 	}
 }
 
@@ -167,18 +213,29 @@ func (m model) View() string {
 			m.vp.width, m.vp.height, minWidth, minHeight,
 		)
 	}
+
+	var out string
+	banner := brandStyle
 	switch m.view {
 	case "list":
-		return m.listView()
+		out = m.listView()
+	case "view":
+		out = m.viewView()
 	case "add":
-		return m.addView()
+		out = m.addView()
 	case "edit":
-		return m.editView()
+		out = m.editView()
 	case "rm":
-		return m.rmView()
+		out = m.rmView()
 	case "locked":
-		return m.lockedView()
+		out = m.lockedView()
 	default:
-		return m.listView()
+		out = noSuchView()
+		banner = errorStyle
 	}
+	if m.errMsg != nil {
+		banner = errorStyle
+	}
+
+	return boxStyle.Render(banner.Render(headerBanner) + "\n\n" + out)
 }

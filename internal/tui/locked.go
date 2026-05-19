@@ -1,9 +1,9 @@
 package tui
 
 import (
+	"dura5ka/ubpm/internal/vault"
 	"fmt"
 	"strings"
-	"dura5ka/ubpm/internal/vault"
 
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
@@ -108,7 +108,7 @@ func (m model) lockedUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.state.locked.inputPtr.EchoMode(huh.EchoModeNormal)
 			}
 			m.state.locked.peekPw = !m.state.locked.peekPw
-		
+
 		// we do not add toggle help function here as short and full help
 		// report the same keys
 		case key.Matches(msg, m.state.locked.keys.Quit):
@@ -145,4 +145,3 @@ func (m model) lockedView() string {
 
 	return out
 }
-

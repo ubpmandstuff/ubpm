@@ -14,6 +14,7 @@ import (
 type listKeymap struct {
 	Up      key.Binding
 	Down    key.Binding
+	View    key.Binding
 	Add     key.Binding
 	Edit    key.Binding
 	Rm      key.Binding
@@ -25,13 +26,13 @@ type listKeymap struct {
 
 // ShortHelp returns the keys to show in compact help view
 func (k listKeymap) ShortHelp() []key.Binding {
-	return []key.Binding{k.Lock, k.Help, k.Quit}
+	return []key.Binding{k.View, k.Lock, k.Help, k.Quit}
 }
 
 // FullHelp returns the keys to show in complete help view
 func (k listKeymap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Up, k.Down},
+		{k.Up, k.Down, k.View},
 		{k.SeePass, k.Add, k.Edit, k.Rm},
 		{k.Lock, k.Help, k.Quit},
 	}
@@ -46,6 +47,10 @@ var listKeys = listKeymap{
 		key.WithKeys("down", "j"),
 		key.WithHelp("↓/j", "move down"),
 	),
+	View: key.NewBinding(
+		key.WithKeys("enter"),
+		key.WithHelp("enter", "view entry"),
+	),
 	Add: key.NewBinding(
 		key.WithKeys("a"),
 		key.WithHelp("a", "add entry"),
@@ -59,8 +64,8 @@ var listKeys = listKeymap{
 		key.WithHelp("d/r", "delete entry"),
 	),
 	SeePass: key.NewBinding(
-		key.WithKeys(" ", "v"),
-		key.WithHelp("v/space", "peek passwd"),
+		key.WithKeys(" ", "f2"),
+		key.WithHelp("space/f2", "peek passwd"),
 	),
 	Lock: key.NewBinding(
 		key.WithKeys("ctrl+l"),
@@ -101,7 +106,7 @@ func (m model) listUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.state.list.cursor > 0 {
 				m.state.list.cursor--
 			}
-		
+
 		case key.Matches(msg, m.state.list.keys.Down):
 			m.state.list.passwdVisible = false
 			if m.state.list.cursor < len(m.vault.Data.Entries)-1 {
@@ -109,6 +114,10 @@ func (m model) listUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 		// change views
+		case key.Matches(msg, m.state.list.keys.View):
+			m.state.list.passwdVisible = false
+			return m, m.switchView(m.vault.Data.Entries[m.state.list.cursor])
+
 		case key.Matches(msg, m.state.list.keys.Add):
 			m.state.list.passwdVisible = false
 			return m, m.switchAdd()
@@ -131,7 +140,7 @@ func (m model) listUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case key.Matches(msg, m.state.list.keys.Help):
 			m.help.ShowAll = !m.help.ShowAll
-		
+
 		case key.Matches(msg, m.state.list.keys.Quit):
 			return m, tea.Quit
 		}
@@ -140,8 +149,6 @@ func (m model) listUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) listView() string {
-	cursorStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#7e98e8"))
 	b1Style := lipgloss.NewStyle().Padding(1, 2).MarginRight(2)
 	b2Style := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
@@ -154,14 +161,11 @@ func (m model) listView() string {
 
 	var b1 strings.Builder
 
-	// heading
-	b1.WriteString("ubpm, a usb-based password manager\n\n")
-
 	// entry list
 	if len(m.vault.Data.Entries) > 0 {
 		for i, e := range m.vault.Data.Entries {
 			if m.state.list.cursor == i {
-				fmt.Fprintf(&b1, "%s %s\n", cursorStyle.Render("> "), e.Title)
+				fmt.Fprintf(&b1, "%s %s\n", brandStyle.Render("> "), e.Title)
 			} else {
 				fmt.Fprintf(&b1, "%s %s\n", "  ", e.Title)
 			}
